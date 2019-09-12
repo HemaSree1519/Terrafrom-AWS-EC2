@@ -1,0 +1,14 @@
+/terraform_0.12.8_linux_amd64.zip
+# Compiled files
+*.tfstate
+*.tfstate.backup
+
+# Module directory
+.terraform/
+
+# Sensitive credential Files
+/creds.tf
+
+#Intelllij
+.idea/
+.idea/codeStyles/
