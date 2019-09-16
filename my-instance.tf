@@ -25,26 +25,26 @@ resource "aws_security_group" "google-keep" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-resource "aws_eip" "gk" {
+resource "aws_eip" "gk_ip" {
   instance = "${aws_instance.web_server.id}"
   vpc      = true
 }
-resource "tls_private_key" "example" {
+resource "tls_private_key" "RSA" {
   algorithm = "RSA"
   rsa_bits  = 4096
 }
 
 resource "aws_key_pair" "generated_key" {
   key_name   = "${var.key_name}"
-  public_key = "${tls_private_key.example.public_key_openssh}"
+  public_key = "${tls_private_key.RSA.public_key_openssh}"
 }
 resource "aws_instance" "web_server" {
   ami = "ami-03b6f27628a4569c8"
   instance_type = "t2.micro"
   associate_public_ip_address = true
   security_groups = ["${aws_security_group.google-keep.name}"]
-  key_name      = "${aws_key_pair.generated_key.key_name}"
+  key_name      = "google-keep"
   tags = {
-    Name = "Terraform_EC2_with_SG"
+    Name = "Google-Keep"
   }
 }

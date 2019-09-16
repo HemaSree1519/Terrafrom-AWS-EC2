@@ -1,3 +1,3 @@
 output "eip" {
-  value = "${aws_eip.gk.public_ip}"
+  value = "${aws_eip.gk_ip.public_ip}"
 }
