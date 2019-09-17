@@ -7,14 +7,20 @@ resource "aws_security_group" "google-keep" {
   name = "google-keep"
   description = "Security Group"
   ingress {
-    from_port = 80
-    to_port = 80
+    from_port = 0
+    to_port = 65535
     protocol = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    from_port = 8
-    to_port = 0
+    from_port = 0
+    to_port = 65535
+    protocol = "udp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    from_port = -1
+    to_port = -1
     protocol = "icmp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -29,21 +35,23 @@ resource "aws_eip" "gk_ip" {
   instance = "${aws_instance.web_server.id}"
   vpc      = true
 }
-resource "tls_private_key" "RSA" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
+//When creating instance for 1st time
 
-resource "aws_key_pair" "generated_key" {
-  key_name   = "${var.key_name}"
-  public_key = "${tls_private_key.RSA.public_key_openssh}"
-}
+//resource "tls_private_key" "RSA" {
+//  algorithm = "RSA"
+//  rsa_bits  = 4096
+//}
+//
+//resource "aws_key_pair" "generated_key" {
+//  key_name   = "${var.key_name}"
+//  public_key = "${tls_private_key.RSA.public_key_openssh}"
+//}
 resource "aws_instance" "web_server" {
   ami = "ami-03b6f27628a4569c8"
   instance_type = "t2.micro"
   associate_public_ip_address = true
   security_groups = ["${aws_security_group.google-keep.name}"]
-  key_name      = "google-keep"
+  key_name      = "GoogleKeep"
   tags = {
     Name = "Google-Keep"
   }
